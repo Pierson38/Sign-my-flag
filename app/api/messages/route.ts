@@ -27,7 +27,36 @@ export async function POST(request: NextRequest) {
     color,
     size,
     imagePath,
+    recaptchaToken,
   } = body;
+
+  // Verify reCAPTCHA
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (secretKey && secretKey !== "your-secret-key-here") {
+    if (!recaptchaToken) {
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed." },
+        { status: 400 }
+      );
+    }
+
+    const verifyRes = await fetch(
+      "https://www.google.com/recaptcha/api/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${secretKey}&response=${recaptchaToken}`,
+      }
+    );
+    const verifyData = await verifyRes.json();
+
+    if (!verifyData.success || verifyData.score < 0.5) {
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed." },
+        { status: 403 }
+      );
+    }
+  }
 
   // Validate required fields
   if (

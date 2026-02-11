@@ -87,6 +87,21 @@ export default function MessageForm({
 
     setSubmitting(true);
     try {
+      // Get reCAPTCHA token
+      let recaptchaToken = "";
+      const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+      if (siteKey && window.grecaptcha) {
+        try {
+          recaptchaToken = await window.grecaptcha.execute(siteKey, {
+            action: "submit_message",
+          });
+        } catch {
+          setError(tr.formError);
+          setSubmitting(false);
+          return;
+        }
+      }
+
       // Upload image first if present
       let imagePath: string | null = null;
       if (imageFile) {
@@ -119,6 +134,7 @@ export default function MessageForm({
           gridCol,
           color,
           imagePath,
+          recaptchaToken,
         }),
       });
 
