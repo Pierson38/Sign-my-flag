@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f0e8;
+  --foreground: #1a1a1a;
 }
 
 @theme inline {
@@ -12,15 +12,98 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overscroll-behavior: none;
+}
+
+/* Flag grid overlay */
+.flag-container {
+  position: relative;
+}
+
+.flag-container img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+}
+
+.grid-cell {
+  position: relative;
+  cursor: default;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.grid-cell.available {
+  cursor: pointer;
+}
+
+.grid-cell.available:hover {
+  background: rgba(255, 255, 255, 0.35);
+  outline: 1px dashed rgba(0, 0, 0, 0.4);
+  outline-offset: -1px;
+}
+
+.grid-cell.occupied {
+  cursor: pointer;
+}
+
+.grid-cell.reserved {
+  pointer-events: none;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+/* Scrollable wrapper — fills parent, allows pan when zoomed */
+.flag-scroll-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border: 2px solid #c5a55a;
+  border-radius: 8px;
+  background: #fff;
+  position: relative;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Floating controls */
+.flag-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.flag-controls > * {
+  pointer-events: auto;
 }
