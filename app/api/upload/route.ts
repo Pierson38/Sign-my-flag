@@ -1,16 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 import crypto from "crypto";
 
-const UPLOADS_DIR = path.join(process.cwd(), "uploads");
 const MAX_SIZE = 2 * 1024 * 1024; // 2 MB
 const ALLOWED_TYPES = [
   "image/jpeg",
   "image/png",
   "image/gif",
   "image/webp",
-  "image/svg+xml",
 ];
 
 export async function POST(request: NextRequest) {
@@ -35,14 +32,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  await mkdir(UPLOADS_DIR, { recursive: true });
-
   const ext = file.name.split(".").pop() || "png";
-  const filename = `${crypto.randomUUID()}.${ext}`;
-  const filepath = path.join(UPLOADS_DIR, filename);
+  const filename = `flag-signatures/${crypto.randomUUID()}.${ext}`;
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(filepath, buffer);
+  const blob = await put(filename, file, {
+    access: "public",
+    addRandomSuffix: false,
+  });
 
-  return NextResponse.json({ filename });
+  return NextResponse.json({ url: blob.url });
 }

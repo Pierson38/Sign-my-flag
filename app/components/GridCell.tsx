@@ -78,7 +78,7 @@ export default function GridCell({
           ...style,
           ...(hasImage
             ? {
-                backgroundImage: `url(/api/uploads/${message.imagePath})`,
+                backgroundImage: `url(${message.imagePath})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }

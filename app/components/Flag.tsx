@@ -295,7 +295,7 @@ export default function Flag({ lang }: FlagProps) {
             </p>
             {viewingMessage.imagePath && (
               <img
-                src={`/api/uploads/${viewingMessage.imagePath}`}
+                src={viewingMessage.imagePath}
                 alt="Image jointe"
                 className="mt-3 rounded-lg w-full object-contain max-h-60"
               />

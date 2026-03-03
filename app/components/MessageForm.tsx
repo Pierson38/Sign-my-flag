@@ -118,7 +118,7 @@ export default function MessageForm({
           return;
         }
         const uploadData = await uploadRes.json();
-        imagePath = uploadData.filename;
+        imagePath = uploadData.url;
       }
 
       // Create message
